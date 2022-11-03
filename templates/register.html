@@ -6,25 +6,42 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--Stylesheets-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
-    <script type="text/javascript" src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    
+    <!--Scripts-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+
+    <script
+    src="https://code.jquery.com/jquery-3.6.1.js"
+    integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI="
+    crossorigin="anonymous"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+
     <title>Register New Patient</title>
     <link rel="icon" type="image/x-icon" href="{% static 'images/fav.png' %}">
 </head>
+
+
 
 <body>
     <header>
         <!-- NAVIGATION SECTION -->
         <div class="container">
             <div class="row py-3">
-                <div class="col-7 col-lg-4 order-2 order-lg-1 text-center py-1">
+                <div class="col-7 col-lg-3 order-2 order-lg-1 text-center py-1">
                     <img class="img-fluid" src="{% static 'images/logo.png' %}" alt="">
                 </div>
-                <div class="col-2 col-lg-6 order-1 order-lg-2">
+                <div class="col-2 col-lg-7 order-1 order-lg-2">
                     <nav class="navbar navbar-expand-lg">
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -37,7 +54,13 @@
                                         href="/index">Home</a></li>
                                 <li class="nav-item"><a class="nav-link" href="/register">Register New Patient</a></li>
                                 <li class="nav-item"><a class="nav-link" href="/records">Patient Records</a></li>
+
+                                {% if request.user.is_staff %}
                                 <li class="nav-item"><a class="nav-link" href="/admin">Admin Panel</a></li>
+                                {% else %}
+                                <li class="nav-item"><a class="nav-link">Logged in as : {{user.first_name}}</a></li>
+                                {% endif %}
+
                             </ul>
                         </div>
                     </nav>
@@ -59,7 +82,7 @@
             <h1 class="text-center">REGISTER NEW PATIENT</h1>
             <div class="row justify-content-center">
                 <div class="col-6">
-                    <form name="register_patient" action="" method="POST" class="my-5 py-5">
+                    <form name="register_patient" action="" method="POST" class="my-4 py-4" onsubmit="return handleData()">
                         {% csrf_token %}
                         <div class="form-floating mb-3">
                             <input type="name" name="name" class="form-control" id="floatingInput" placeholder="name"
@@ -79,7 +102,7 @@
                             </div>
                             <div>
                                 <label>Next appointment date</label>
-                                <div class="form mb-3 col-4">
+                                <div class="form mb-3 col-5">
                                     <input type="datetime-local" id="datefield" name="appoint_date" class="form-control"
                                         id="floatingInput" placeholder="appoint_date" min="2022-11-10T12:00" required>
                                 </div>
@@ -122,7 +145,7 @@
                         <div>
                             <div class="row align-items-center">
                                 
-                                <div class="form-group mb-3 col-4">
+                                <div class="form-group mb-4 col-3">
                                     <label>Dosage</label>
                                     <select name='dosage' required>
                                         <option required></option>
@@ -133,11 +156,15 @@
                                 </div>
                                 
                                 
-                                <div class="form-group mb-3 col-4">    
-                                    <div><label><input type=checkbox name="timeofday" name="timeofday[]" value='1'>&nbsp;Morning</label></div>
-                                    <div><label><input type=checkbox name="timeofday" name="timeofday[]" value='2'>&nbsp;Afternoon</label></div>
-                                    <div><label><input type=checkbox name="timeofday" name="timeofday[]" value='3'>&nbsp;Night</label></div>
+                                <div class="form-group mb-2 col-3" name="timeofday">
+                                    <div><label><input type=checkbox id="timeofday" name="timeofday[]" value='1'>&nbsp;Morning</label></div>
+                                    <div><label><input type=checkbox id="timeofday" name="timeofday[]" value='2'>&nbsp;Afternoon</label></div>
+                                    <div><label><input type=checkbox id="timeofday" name="timeofday[]" value='3'>&nbsp;Night</label></div>
                                 </div>
+
+                                <div class="form-group mb-3 col-6" style="visibility:hidden; color:red; " id="chk_option_error">
+                                    Please select at least one option.
+                                    </div>
                             </div>
                         </div>
                         <div class="form-floating mb-3">
@@ -159,45 +186,10 @@
     {% for message in messages %}
     <script>alert("{{ message }}")</script>
     {% endfor %}
-        
-        <script>
-        //Medicine search design
-            $(document).ready(function () {
-      $('select').selectize({
-          sortField: 'text'
-      });
-  });
-  
-        </script>
+    
+    <!--Scripts-->
+    <script src="{% static 'js/register.js' %}"></script>
 
-        <script>
-            var today = new Date();
-            var dd = today.getDate();
-            var mm = today.getMonth() + 1;
-            var yyyy = today.getFullYear();
-            //
-            var hh = today.getHours();
-            var m = today.getMinutes();
-    
-            if (dd < 10) {
-               dd = '0' + dd;
-            }
-    
-            if (mm < 10) {
-               mm = '0' + mm;
-            }
-        
-            today = yyyy + "-" + mm + "-" + dd + "T" + hh + ":" + m;
-            console.log(today)
-            document.getElementById("datefield").setAttribute("min", today);
-        </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous">
-        </script>
-
-    
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
 </body>
 
 </html>

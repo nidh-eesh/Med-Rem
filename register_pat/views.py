@@ -21,12 +21,13 @@ def register(request):
         mobile = request.POST['mobileNumber']
         timeofdaychar = request.POST.getlist('timeofday')
         timeofday = [eval(i) for i in timeofdaychar]
-        perday=len(timeofday)
+
         #Save data to database
+
         times = MedicineTime.objects.all()
         patientRec = PatientRec.objects.create(name=name, age=age,date=date,appoint_date=appoint_date,gender=gender,
                                                 dosage=dosage,medicine_rec_id=medicine,medicond=medicond,
-                                                perday=perday,mobile=mobile)
+                                                mobile=mobile)
         for time in times:
             if time.id in timeofday:
                 patientRec.medicine_time.add(time)

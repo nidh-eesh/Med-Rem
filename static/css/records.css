@@ -1,0 +1,27 @@
+h1{
+    font-size: 47px;
+    color: #23a6bd;
+}
+
+#patient_records {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  #patient_records td, #patient_records th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  #patient_records tr:nth-child(even){background-color: #f2f2f2;}
+  
+  #patient_records tr:hover {background-color: #ddd;}
+  
+  #patient_records th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #04AA6D;
+    color: white;
+  }

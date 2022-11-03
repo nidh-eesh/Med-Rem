@@ -17,7 +17,6 @@ class PatientRec(models.Model):
     medicond = models.TextField()
     medicine_rec = models.ForeignKey(MedicineRecord,on_delete=models.PROTECT,null=True)
     dosage = models.IntegerField()
-    perday = models.IntegerField()
     medicine_time=models.ManyToManyField(MedicineTime)
     mobile = models.CharField(max_length=15)
     appoint_date = models.DateTimeField()

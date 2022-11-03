@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 {% load static %}
 <html lang="en">
 
@@ -7,8 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <script type="text/javascript" src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/records.css' %}">
     <title>Patient Records</title>
     <link rel="icon" type="image/x-icon" href="{% static 'images/fav.png' %}">
 </head>
@@ -54,47 +54,43 @@
         <div class="col sub-page-1">
             <h1 class="text-center">PATIENT RECORDS</h1>
             <div class="row justify-content-center">
-                <div class="patient" id="patient">
-                    <div class="container">
-                        <div class="row">
+                <div class="container">
+                    <div class="row">
+                        <div class="my-3 py-3">
                             <div class="col text-center">
-                                <!-- Patient Records -->
-                                {% for patient in patients %}
-                                <div class="patient">
-                                    <div class="patient_content">
-                                        <div align='left'>
-                                            <br>
-                                            <div class="patient_id">Patient ID : {{patient.id}}</a></div>
-                                            <div class="patient_name">Patient Name : {{patient.name}}</a></div>
-                                            <div class="dropdown">
-                                                <button class="dropbtn">Details</button>
-                                                <div class="dropdown-content">
-                                                    <div class="patient_age">Age : {{patient.age}}</a></div>
-                                                    <div class="patient_date">Date of Prescription :
-                                                        {{patient.date}}</a></div>
-                                                    <div class="patient_gender">Gender : {{patient.gender}}</a></div>
-                                                    <div class="patient_medicond">Medical Conditions :
-                                                        {{patient.medicond}}</a>
-                                                    </div>
-                                                    <div class="patient_medicine">Medicine Prescribed :
-                                                        {{patient.medicine}}</a>
-                                                    </div>
-                                                    <div class="patient_dosage">Dosage Prescribed :
-                                                        {{patient.dosage}}</a></div>
-                                                    <div class="patient_perday">Dose per day : {{patient.perday}}</a>
-                                                    </div>
-                                                    <div class="patient_mobile">Mobile Number : {{patient.mobile}}</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <br><br>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endfor %}
+                                <div style="overflow-x:auto;">
+                                <table id="patient_records">
+                                    <!-- Patient Records -->
+                                    <tr>
+                                        <th>Patient ID</th>
+                                        <th>Patient Name</th>
+                                        <th>Age</th>
+                                        <th>Date of Prescription</th>
+                                        <th>Gender</th>
+                                        <th>Medical Conditions</th>
+                                        <th>Medicine Prescribed</th>
+                                        <th>Dosage Prescribed</th>
+                                        <th>Dosage Schedule</th>
+                                        <th>Mobile Number</th>
+                                        <th>Appointment Date</th>
+                                    </tr>
+                                    {% for patient in patients %}
+                                    <tr>
+                                        <td>{{patient.id}}</td>
+                                        <td>{{patient.name}}</td>
+                                        <td>{{patient.age}}</td>
+                                        <td>{{patient.date}}</td>
+                                        <td>{{patient.gender}}</td>
+                                        <td>{{patient.medicond}}</td>
+                                        <td>{{patient.medicine_rec.medicine_name}}</td>
+                                        <td>{{patient.dosage}}</td>
+                                        <td>{{patient.medicine_time.count}}</td>
+                                        <td>{{patient.mobile}}</td>
+                                        <td>{{patient.appoint_date}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -102,9 +98,6 @@
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
-        crossorigin="anonymous"></script>
 </body>
 
 </html>
