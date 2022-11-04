@@ -5,6 +5,8 @@ from medicine.models import MedicineRecord
 class MedicineTime(models.Model):
     time = models.TimeField()
 
+    def __str__(self):
+        return str(self.time)
 
 
 class PatientRec(models.Model):
