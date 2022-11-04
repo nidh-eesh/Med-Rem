@@ -11,7 +11,7 @@ def medicine_time_alert():
     time = datetime.now().time().strftime("%H:%M")
     patient_rec = PatientRec.objects.all()
     for record in patient_rec:
-        medicine_time = str(record.medicine_time.time)
+        medicine_time = str(record.medicine_time)
         medicine_time = datetime.strptime(medicine_time, "%H:%M:%S").strftime("%H:%M")
         if medicine_time == time:
             message = client.messages.create(

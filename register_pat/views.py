@@ -19,21 +19,19 @@ def register(request):
         medicine = request.POST['medicine']
         dosage = request.POST['dosage']        
         mobile = request.POST['mobileNumber']
-        timeofdaychar = request.POST.getlist('timeofday')
+        timeofdaychar = request.POST.getlist('timeofday[]')
         timeofday = [eval(i) for i in timeofdaychar]
 
         #Save data to database
-
         times = MedicineTime.objects.all()
         patientRec = PatientRec.objects.create(name=name, age=age,date=date,appoint_date=appoint_date,gender=gender,
                                                 dosage=dosage,medicine_rec_id=medicine,medicond=medicond,
                                                 mobile=mobile)
+        patientRec.save()
         for time in times:
             if time.id in timeofday:
-                patientRec.medicine_time.add(time)
-                                                    
-            
-        patientRec.save()
+                patientRec.medicine_time.add(time)               
+        
         messages.success(request, 'Record Saved')
     
         #Convert Date Format

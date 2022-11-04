@@ -11,5 +11,5 @@ def appointment(request):
     return render(request, 'appointment.html')
 
 def records(request):
-    patients = PatientRec.objects.all()
+    patients = PatientRec.objects.all().order_by('id')
     return render(request, "records.html", {'patients' : patients} )

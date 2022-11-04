@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'css/records.css' %}">
     <title>Patient Records</title>
     <link rel="icon" type="image/x-icon" href="{% static 'images/fav.png' %}">
@@ -53,44 +55,55 @@
     <div class="container">
         <div class="col sub-page-1">
             <h1 class="text-center">PATIENT RECORDS</h1>
-            <div class="row justify-content-center">
+            <div class="row justify-content-center" style="position:absolute; left:10px; right:12px">
                 <div class="container">
                     <div class="row">
                         <div class="my-3 py-3">
                             <div class="col text-center">
-                                <div style="overflow-x:auto;">
-                                <table id="patient_records">
-                                    <!-- Patient Records -->
-                                    <tr>
-                                        <th>Patient ID</th>
-                                        <th>Patient Name</th>
-                                        <th>Age</th>
-                                        <th>Date of Prescription</th>
-                                        <th>Gender</th>
-                                        <th>Medical Conditions</th>
-                                        <th>Medicine Prescribed</th>
-                                        <th>Dosage Prescribed</th>
-                                        <th>Dosage Schedule</th>
-                                        <th>Mobile Number</th>
-                                        <th>Appointment Date</th>
-                                    </tr>
-                                    {% for patient in patients %}
-                                    <tr>
-                                        <td>{{patient.id}}</td>
-                                        <td>{{patient.name}}</td>
-                                        <td>{{patient.age}}</td>
-                                        <td>{{patient.date}}</td>
-                                        <td>{{patient.gender}}</td>
-                                        <td>{{patient.medicond}}</td>
-                                        <td>{{patient.medicine_rec.medicine_name}}</td>
-                                        <td>{{patient.dosage}}</td>
-                                        <td>{{patient.medicine_time.count}}</td>
-                                        <td>{{patient.mobile}}</td>
-                                        <td>{{patient.appoint_date}}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </table>
-                            </div>
+                                <div style="overflow-x:auto; width:100%; height:65vh;
+                                    overflow:auto;">
+                                    <table id="patient_records">
+                                        <!-- Patient Records -->
+                                        <tr>
+                                            <th>Patient ID</th>
+                                            <th>Patient Name</th>
+                                            <th>Age</th>
+                                            <th>Date of Prescription</th>
+                                            <th>Gender</th>
+                                            <th>Medical Conditions</th>
+                                            <th>Medicine Prescribed</th>
+                                            <th>Dosage Prescribed</th>
+                                            <th>Dosage Per Day</th>
+                                            <th>Mobile Number</th>
+                                            <th>Appointment Date</th>
+                                            <th></th>
+                                        </tr>
+                                        {% for patient in patients %}
+                                        <tr>
+                                            <td>{{patient.id}}</td>
+                                            <td>{{patient.name}}</td>
+                                            <td>{{patient.age}}</td>
+                                            <td>{{patient.date}}</td>
+                                            <td>{{patient.gender}}</td>
+                                            <td>{{patient.medicond}}</td>
+                                            <td>{{patient.medicine_rec.medicine_name}}</td>
+                                            <td>{{patient.dosage}}</td>
+                                            <td>{{patient.medicine_time.count}}</td>
+                                            <td>{{patient.mobile}}</td>
+                                            <div>
+                                                <td class="data">
+                                                    <!--<input name="date" class="datepicker-input" type="datetime-local"/>-->{{patient.appoint_date}}
+                                                </td>
+                                                <td>
+                                                    <button class="save"> Save </button>
+                                                    <button class="edit"> Edit </button>
+                                                    <!--<button class="delete"> Delete </button>-->
+                                                </td>
+                                            </div>
+                                        </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -98,6 +111,48 @@
             </div>
         </div>
     </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
+    <script>
+        $('.datepicker-input').datepicker({
+            dateFormat: 'mm-dd-yy',
+            onClose: function (dateText, inst) {
+
+                $(this).parent().find('.data').focus().html(dateText).blur();
+            }
+        });
+
+
+        $(document).on('click', '.edit', function () {
+            $(this).parent().siblings('td.data').each(function () {
+                $(this).parent().find('.datepicker-input').datepicker("show");
+                var content = $(this).html();
+                $(this).html('<input value="' + content + '" />');
+            });
+            $(this).siblings('.save').show();
+            $(this).siblings('.delete').hide();
+            $(this).hide();
+        });
+        $(document).on('click', '.save', function () {
+            $('input').each(function () {
+                var content = $(this).val();
+                $(this).html(content);
+                $(this).contents().unwrap();
+            });
+            $(this).siblings('.edit').show();
+            $(this).siblings('.delete').show();
+            $(this).hide();
+        });
+
+
+
+        $('.edit').click(function () {
+            $(this).parent().find('.datepicker-input').datepicker("show");
+        });
+    </script>
+
+
 </body>
 
 </html>
