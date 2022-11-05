@@ -37,6 +37,7 @@ CSRF_TRUSTED_ORIGINS = ['https://5180-106-200-46-57.ngrok.io']
 # Application definition
 
 INSTALLED_APPS = [
+    'doctor_search.apps.DoctorSearchConfig',
     'medicine.apps.MedicineConfig',
     'notification.apps.NotificationConfig',
     'register_pat.apps.RegisterPatConfig',

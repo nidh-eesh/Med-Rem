@@ -15,7 +15,7 @@ class PatientRec(models.Model):
     date = models.DateField()
     gender = models.CharField(max_length=10)
     medicond = models.TextField()
-    medicine_rec = models.ForeignKey(MedicineRecord,on_delete=models.PROTECT,null=True)
+    medicine_rec = models.ForeignKey(MedicineRecord,on_delete=models.SET_NULL,null=True)
     dosage = models.IntegerField()
     medicine_time=models.ManyToManyField(MedicineTime)
     mobile = models.CharField(max_length=15)
