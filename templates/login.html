@@ -5,6 +5,7 @@
 
   <meta charset="UTF-8">
   <title>Log In</title>
+  <link rel="icon" type="image/x-icon" href="{% static 'images/fav.png' %}">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
@@ -25,7 +26,7 @@
         {% csrf_token %}
         
         <div class="form__field">
-          <input type="text" name="username" placeholder="username">
+          <input type="text" name="username" class="username" placeholder="username" style="width: 100%;">
         </div>
 
         <div class="form__field">
@@ -33,9 +34,13 @@
         </div>
 
         <div class="form__field">
-          <input type="submit" value="Log In">
-        </div>
-
+          <input type="submit" value="Log In" style="margin-bottom:3rem;">
+        
+        <div style="color:#8ceabb;">
+        {% for message in messages %}
+          {{ message }}
+        {% endfor %}
+      </div></div>
       </form>
     </div>
   </div>

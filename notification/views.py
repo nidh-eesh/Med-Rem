@@ -27,7 +27,7 @@ def webflow(request):
                 for id in patient_ids:
                     message1="appointment {}".format(id)
                     message2="Appointment {}".format(id)
-                    mobile=user[3:]
+                    mobile=user[12:]
                     if PatientRec.objects.get(id=parsed_id).mobile == mobile:
                         if message == message1 or message == message2:
                             appointment_fetch(user,id)
