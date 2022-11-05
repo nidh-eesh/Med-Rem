@@ -14,7 +14,7 @@ def medicine_time_alert():
     for record in patient_rec:       
         for time in times:
             try:
-                medi_time = (record.medicine_time.get(id=2))
+                medi_time = record.medicine_time.get(id=time.id)
                 medi_time = datetime.strptime(str(medi_time), "%H:%M:%S").strftime("%H:%M")
             except MedicineTime.DoesNotExist:
                 medi_time = ''

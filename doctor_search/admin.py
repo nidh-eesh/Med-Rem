@@ -1,5 +1,8 @@
 from django.contrib import admin
-from .models import DocSearch
+from .models import *
 
 # Register your models here.
-admin.site.register(DocSearch)
+class DocSearchAdmin(admin.ModelAdmin):
+    filter_horizontal = ['day_of_week']
+admin.site.register(DocSearch ,DocSearchAdmin)
+admin.site.register(Speciality)
