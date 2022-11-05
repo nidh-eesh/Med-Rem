@@ -90,7 +90,7 @@
                                         </thead>
                                         {% for patient in patients %}
                                         <tr>
-                                            <td>{{patient.id}}</td>
+                                            <td class="patient_id">{{patient.id}}</td>
                                             <td>{{patient.name}}</td>
                                             <td>{{patient.age}}</td>
                                             <td>{{patient.date}}</td>
@@ -105,8 +105,8 @@
                                                     {{patient.appoint_date}}
                                                 </td>
                                                 <td>
-                                                    <button class="save" onclick="save"> Save </button>
-                                                    <button class="edit" onclick="edit"> Edit </button>
+                                                    <button class="save" type="submit"> Save </button>
+                                                    <button class="edit"> Edit </button>
                                                     <!--<button class="delete"> Delete </button>-->
                                                 </td>
                                             </div>
@@ -129,6 +129,38 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
         crossorigin="anonymous"></script>
+
+
+    <script>
+        var appoint_date = null;
+        $(document).on('click', '.edit', function () {
+            $(this).parent().siblings('td.data').each(function () {
+                var content = $(this).html();
+                $(this).html('<input type=datetime-local value="' + content + '" />');
+            });
+            $(this).siblings('.save').show();
+            /*$(this).siblings('.delete').hide();*/
+            $(this).hide();
+        });
+        $(document).on('click', '.save', function () {
+            $('input').each(function () {
+                var content = $(this).val();
+                $(this).html(content);
+                $(this).contents().unwrap();
+                appoint_date = content;
+                console.log(appoint_date);   
+            });
+            var id = $(this).parent().siblings('.patient_id').text();
+                console.log(id);
+            $.post('/records/', { appoint_date : appoint_date, patient_id : id, 'csrfmiddlewaretoken': '{{ csrf_token }}' }, function(result) {
+                alert('Appointment updated successfully');
+                });
+            $(this).siblings('.edit').show();
+            /*$(this).siblings('.delete').show();*/
+            $(this).hide();
+        });
+    </script>
+
 </body>
 
 </html>
