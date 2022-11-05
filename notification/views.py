@@ -27,9 +27,15 @@ def webflow(request):
                 for id in patient_ids:
                     message1="appointment {}".format(id)
                     message2="Appointment {}".format(id)
-                    if message == message1 or message == message2:
-                        appointment_fetch(user,id)
+                    mobile=user[3:]
+                    if PatientRec.objects.get(id=parsed_id).mobile == mobile:
+                        if message == message1 or message == message2:
+                            appointment_fetch(user,id)
+                            response = MessagingResponse()
+                            return HttpResponse(str(response))
+                    else:
                         response = MessagingResponse()
+                        response.message('Please try from registered mobile number')
                         return HttpResponse(str(response))
             else:
                 response = MessagingResponse()
