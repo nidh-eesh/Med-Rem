@@ -68,10 +68,10 @@
                     <div class="row">
                         <div class="my-3 py-3">
                             <div class="col text-center">
-                                <div id="tableContainer" class="tableContainer">
+                                <div class="tableContainer">
                                     <table id="patient_records" class="scrollTable">
                                         <!-- Patient Records -->
-                                        <thead class="fixedHeader">
+                                        <thead>
                                             <tr>
                                                 <th>Patient ID</th>
                                                 <th>Patient Name</th>
@@ -87,8 +87,7 @@
                                                 <th></th>
                                             </tr>
                                         </thead>
-                                        <tbody class="scrollContent" id="scrollContent">
-                                            {% for patient in patients %}
+                                    <tbody>
                                             <tr>
                                                 <td class="patient_id">{{patient.id}}</td>
                                                 <td>{{patient.name}}</td>
