@@ -6,12 +6,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css'>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">   
     <link rel="stylesheet" href="{% static 'css/records.css' %}">
     <title>Patient Records</title>
     <link rel="icon" type="image/x-icon" href="{% static 'images/fav.png' %}">
@@ -68,11 +68,10 @@
                     <div class="row">
                         <div class="my-3 py-3">
                             <div class="col text-center">
-                                <div style="overflow-x:auto; width:100%; height:65vh;
-                                    overflow:auto;">
-                                    <table id="patient_records">
+                                <div id="tableContainer" class="tableContainer">
+                                    <table id="patient_records" class="scrollTable">
                                         <!-- Patient Records -->
-                                        <thead>
+                                        <thead class="fixedHeader">
                                             <tr>
                                                 <th>Patient ID</th>
                                                 <th>Patient Name</th>
@@ -88,19 +87,19 @@
                                                 <th></th>
                                             </tr>
                                         </thead>
-                                        {% for patient in patients %}
-                                        <tr>
-                                            <td class="patient_id">{{patient.id}}</td>
-                                            <td>{{patient.name}}</td>
-                                            <td>{{patient.age}}</td>
-                                            <td>{{patient.date}}</td>
-                                            <td>{{patient.gender}}</td>
-                                            <td>{{patient.medicond}}</td>
-                                            <td>{{patient.medicine_rec.medicine_name}}</td>
-                                            <td>{{patient.dosage}}</td>
-                                            <td>{{patient.medicine_time.count}}</td>
-                                            <td>{{patient.mobile}}</td>
-                                            <div>
+                                        <tbody class="scrollContent" id="scrollContent">
+                                            {% for patient in patients %}
+                                            <tr>
+                                                <td class="patient_id">{{patient.id}}</td>
+                                                <td>{{patient.name}}</td>
+                                                <td>{{patient.age}}</td>
+                                                <td>{{patient.date}}</td>
+                                                <td>{{patient.gender}}</td>
+                                                <td>{{patient.medicond}}</td>
+                                                <td>{{patient.medicine_rec.medicine_name}}</td>
+                                                <td>{{patient.dosage}}</td>
+                                                <td>{{patient.medicine_time.count}}</td>
+                                                <td>{{patient.mobile}}</td>
                                                 <td class="data">
                                                     {{patient.appoint_date}}
                                                 </td>
@@ -109,9 +108,9 @@
                                                     <button class="edit"> Edit </button>
                                                     <!--<button class="delete"> Delete </button>-->
                                                 </td>
-                                            </div>
-                                        </tr>
-                                        {% endfor %}
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -121,7 +120,7 @@
             </div>
         </div>
     </div>
-
+    
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
@@ -131,35 +130,7 @@
         crossorigin="anonymous"></script>
 
 
-    <script>
-        var appoint_date = null;
-        $(document).on('click', '.edit', function () {
-            $(this).parent().siblings('td.data').each(function () {
-                var content = $(this).html();
-                $(this).html('<input type=datetime-local value="' + content + '" />');
-            });
-            $(this).siblings('.save').show();
-            /*$(this).siblings('.delete').hide();*/
-            $(this).hide();
-        });
-        $(document).on('click', '.save', function () {
-            $('input').each(function () {
-                var content = $(this).val();
-                $(this).html(content);
-                $(this).contents().unwrap();
-                appoint_date = content;
-                console.log(appoint_date);   
-            });
-            var id = $(this).parent().siblings('.patient_id').text();
-                console.log(id);
-            $.post('/records/', { appoint_date : appoint_date, patient_id : id, 'csrfmiddlewaretoken': '{{ csrf_token }}' }, function(result) {
-                alert('Appointment updated successfully');
-                });
-            $(this).siblings('.edit').show();
-            /*$(this).siblings('.delete').show();*/
-            $(this).hide();
-        });
-    </script>
+    <script src="{% static 'js/records.js' %}"></script>
 
 </body>
 
