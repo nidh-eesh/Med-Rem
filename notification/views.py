@@ -19,39 +19,47 @@ def webflow(request):
     print(f'{user} says {message}')
 
     # Check if Appointment is included in message
-    if ('appointment' or 'Appointment') in message:
-        print(message)
-        patient_ids = PatientRec.objects.values_list('id', flat=True)
-        # Check if ID exists in list
-        parsed_id = int(re.search(r'\d+', message).group())
-        if PatientRec.objects.filter(id=parsed_id).exists():
-            for id in patient_ids:
-                message1 = "appointment {}".format(id)
-                message2 = "Appointment {}".format(id)
-                mobile = user[12:]
-                if PatientRec.objects.get(id=parsed_id).mobile == mobile:
-                    if message == message1 or message == message2:
-                        appointment_fetch(user, id)
+    appoint_msg = ['Appointment', 'appointment', 'appointmnt',
+                   'Appointmnt', 'appoinment', 'Appoinment']
+    for i in appoint_msg:
+        if i in message:
+            patient_ids = PatientRec.objects.values_list('id', flat=True)
+            # Check if ID exists in list
+            parsed_id = int(re.search(r'\d+', message).group())
+            print('yes')
+            if PatientRec.objects.filter(id=parsed_id).exists():
+                for id in patient_ids:
+                    message1 = i+" {}".format(id)
+                    print(message1)
+                    mobile = user[12:]
+                    if PatientRec.objects.get(id=parsed_id).mobile == mobile:
+                        if message == message1:
+                            appointment_fetch(user, id)
+                            response = MessagingResponse()
+                            return HttpResponse(str(response))
+                    else:
                         response = MessagingResponse()
+                        response.message(
+                            'Please try from registered mobile number')
                         return HttpResponse(str(response))
-                else:
-                    response = MessagingResponse()
-                    response.message(
-                        'Please try from registered mobile number')
-                    return HttpResponse(str(response))
-        else:
-            response = MessagingResponse()
-            response.message('ID does not exist')
-            return HttpResponse(str(response))
-    elif ('Doctor Availability' or 'doctor availability') in message:
+            else:
+                response = MessagingResponse()
+                response.message('ID does not exist')
+                return HttpResponse(str(response))
+    doctor_search_msg = ['Search Doctors', 'search doctors', 'search doctrs ', 'search Doctors',
+                         'search docs', 'Search docs', 'search Docs', 'Search Doctor', 'search doctor', 
+                         'search doctr ', 'search Doctor', 'search doc', 'Search doc', 'Search Doc', 'search Doc',
+                         'Search doctr', 'Doc search', 'Doc Search', 'Doctor Availablity', 'Doctors', 'doctors','Doctor availablity'
+                         'Available Doctors', 'available doctors', 'Find Doctor']
+    if any(i in message for i in doctor_search_msg):
         mobile = user[12:]
         doctor_search(mobile)
         response = MessagingResponse()
         return HttpResponse(str(response))
     response = MessagingResponse()
     response.message(
-        """Available Servicies: \nFor appointment details send \'Appointment<space>ID\' 
-        \nFor Doctor\'s schedule send \'Doctor Availability\'""")
+        """Available Servicies: \nFor appointment details send \'Appointment<space>ID\'
+        \nFor all doctor\'s schedule send \'Search Doctors\'\nTo search doctors based on speciality send Doctor """)
     return HttpResponse(str(response))
 
 # Send WhatsApp Messages
@@ -94,20 +102,21 @@ def appointment_fetch(mobile, id):
 
 def doctor_search(mobile):
     client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-    doctors = DocSearch.objects.all()
+    doctors = DocSearch.objects.filter(availability=True)
     days = DayOfWeek.objects.all()
     for doctor in doctors:
         avail_day_list = ''
         for day in days:
             try:
                 available_days = doctor.day_of_week.get(id=day.id)
-                avail_day_list = avail_day_list+" , "+str(available_days) 
+                avail_day_list = avail_day_list+" , "+str(available_days)
             except DayOfWeek.DoesNotExist:
                 pass
-        avail_day_list = avail_day_list[2:]        
+        avail_day_list = avail_day_list[2:]
         message = client.messages.create(
             from_='whatsapp:+14155238886',
-            body='Doctor Name : {}\nSpeciality : {}\nGender : {}\nAvailability : {}\nAvailable Days{}\nOP start time : {}\nOP end time : {}\nContact : {}'.format(doctor.name,doctor.speciality,doctor.gender,doctor.availability,avail_day_list,doctor.start_time,doctor.end_time,doctor.mobile),
+            body='Doctor Name : {}\nSpeciality : {}\nGender : {}\nAvailable Days : {}\nOP start time : {}\nOP end time : {}\nContact : {}'.format(
+                doctor.name, doctor.speciality, doctor.gender, avail_day_list, doctor.start_time, doctor.end_time, doctor.mobile),
             to='whatsapp:+91{}'.format(mobile))
         print(mobile)
         print(message.sid)

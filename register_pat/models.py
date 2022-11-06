@@ -8,7 +8,7 @@ class MedicineTime(models.Model):
     def __str__(self):
         return str(self.time)
 
-class PatientGender(models.Model):
+class Gender(models.Model):
     gender=models.CharField(max_length=10)
 
     def __str__(self):
@@ -18,7 +18,7 @@ class PatientRec(models.Model):
     name = models.CharField(max_length=100)
     age = models.IntegerField()
     date = models.DateField()
-    gender = models.ForeignKey(PatientGender,on_delete=models.PROTECT)
+    gender = models.ForeignKey(Gender,on_delete=models.PROTECT)
     medicond = models.TextField()
     medicine_rec = models.ForeignKey(MedicineRecord,on_delete=models.SET_NULL,null=True)
     dosage = models.IntegerField()
