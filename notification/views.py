@@ -61,10 +61,16 @@ def webflow(request):
         doctor_search(mobile)
         response = MessagingResponse()
         return HttpResponse(str(response))
+    doctor_speciality_list = ''
+    for i in doctor_specialities:
+        print(i)
+        doctor_speciality_list = doctor_speciality_list+'\n'+str(i)
     response = MessagingResponse()
     response.message(
-        """Available Servicies: \nFor appointment details send \'Appointment<space>ID\'
-        \nFor all doctor\'s schedule send \'Search Doctors\'\nTo search doctors based on speciality send Doctor\n Available specialities:""")
+        """Available Servicies: 
+        \nFor appointment details send \'Appointment<space>ID\'
+        \nFor all doctor\'s schedule send \'Search Doctors\'
+        \nTo search doctors based on speciality send Doctor\n Available specialities : {}""".format(doctor_speciality_list))
     return HttpResponse(str(response))
 
 # Send WhatsApp Messages
