@@ -4,8 +4,9 @@ from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
 from medrem.settings import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN
 from register_pat.models import PatientRec
-from doctor_search.models import DocSearch, DayOfWeek
+from doctor_search.models import DocSearch, DayOfWeek, Speciality
 from datetime import datetime
+from doctor_search.views import doctor_search,doctor_search_speciality
 import re
 
 # Create your views here.
@@ -50,16 +51,20 @@ def webflow(request):
                          'search docs', 'Search docs', 'search Docs', 'Search Doctor', 'search doctor', 
                          'search doctr ', 'search Doctor', 'search doc', 'Search doc', 'Search Doc', 'search Doc',
                          'Search doctr', 'Doc search', 'Doc Search', 'Doctor Availablity', 'Doctors', 'doctors','Doctor availablity'
-                         'Available Doctors', 'available doctors', 'Find Doctor']
+                         'Available Doctors', 'available doctors', 'Find Doctor', 'Doctor search', 'Doctor Search']
+    mobile = user[12:]
     if any(i in message for i in doctor_search_msg):
-        mobile = user[12:]
+        doctor_specialities= Speciality.objects.values_list('speciality', flat=True)
+        for i in doctor_specialities:
+            if(i in message):
+                doctor_search_speciality(mobile,i)
         doctor_search(mobile)
         response = MessagingResponse()
         return HttpResponse(str(response))
     response = MessagingResponse()
     response.message(
         """Available Servicies: \nFor appointment details send \'Appointment<space>ID\'
-        \nFor all doctor\'s schedule send \'Search Doctors\'\nTo search doctors based on speciality send Doctor """)
+        \nFor all doctor\'s schedule send \'Search Doctors\'\nTo search doctors based on speciality send Doctor\n Available specialities:""")
     return HttpResponse(str(response))
 
 # Send WhatsApp Messages
@@ -96,27 +101,3 @@ def appointment_fetch(mobile, id):
         to='{}'.format(mobile))
     print(mobile)
     print(message.sid)
-
-
-# Doctor Search
-
-def doctor_search(mobile):
-    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-    doctors = DocSearch.objects.filter(availability=True)
-    days = DayOfWeek.objects.all()
-    for doctor in doctors:
-        avail_day_list = ''
-        for day in days:
-            try:
-                available_days = doctor.day_of_week.get(id=day.id)
-                avail_day_list = avail_day_list+" , "+str(available_days)
-            except DayOfWeek.DoesNotExist:
-                pass
-        avail_day_list = avail_day_list[2:]
-        message = client.messages.create(
-            from_='whatsapp:+14155238886',
-            body='Doctor Name : {}\nSpeciality : {}\nGender : {}\nAvailable Days : {}\nOP start time : {}\nOP end time : {}\nContact : {}'.format(
-                doctor.name, doctor.speciality, doctor.gender, avail_day_list, doctor.start_time, doctor.end_time, doctor.mobile),
-            to='whatsapp:+91{}'.format(mobile))
-        print(mobile)
-        print(message.sid)
