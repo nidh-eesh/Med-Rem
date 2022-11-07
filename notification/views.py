@@ -27,11 +27,9 @@ def webflow(request):
             patient_ids = PatientRec.objects.values_list('id', flat=True)
             # Check if ID exists in list
             parsed_id = int(re.search(r'\d+', message).group())
-            print('yes')
             if PatientRec.objects.filter(id=parsed_id).exists():
                 for id in patient_ids:
                     message1 = i+" {}".format(id)
-                    print(message1)
                     mobile = user[12:]
                     if PatientRec.objects.get(id=parsed_id).mobile == mobile:
                         if message == message1:
@@ -53,11 +51,13 @@ def webflow(request):
                          'Search doctr', 'Doc search', 'Doc Search', 'Doctor Availablity', 'Doctors', 'doctors','Doctor availablity'
                          'Available Doctors', 'available doctors', 'Find Doctor', 'Doctor search', 'Doctor Search']
     mobile = user[12:]
+    doctor_specialities= Speciality.objects.values_list('speciality', flat=True)
     if any(i in message for i in doctor_search_msg):
-        doctor_specialities= Speciality.objects.values_list('speciality', flat=True)
-        for i in doctor_specialities:
-            if(i in message):
-                doctor_search_speciality(mobile,i)
+        for j in doctor_specialities:
+            if(j in message):
+                doctor_search_speciality(mobile,j)
+                response = MessagingResponse()
+                return HttpResponse(str(response))
         doctor_search(mobile)
         response = MessagingResponse()
         return HttpResponse(str(response))

@@ -31,7 +31,7 @@ def doctor_search_speciality(mobile,speciality):
     doctors = DocSearch.objects.filter(availability=True)
     days = DayOfWeek.objects.all()
     for doctor in doctors:
-        if(doctor.speciality==speciality):
+        if speciality==str(doctor.speciality):
             avail_day_list = ''
             for day in days:
                 try:
