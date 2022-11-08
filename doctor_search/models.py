@@ -29,7 +29,7 @@ class DayOfWeek(models.Model):
 
 class DocSearch(models.Model):
     name = models.CharField(max_length=100)
-    speciality = models.ForeignKey(Speciality,on_delete=models.PROTECT)
+    speciality = models.ForeignKey(Speciality,on_delete=models.PROTECT,related_name='specialities')
     availability = models.BooleanField()
     gender = models.ForeignKey(Gender,on_delete=models.PROTECT)
     day_of_week = models.ManyToManyField(DayOfWeek)

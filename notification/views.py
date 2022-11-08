@@ -4,9 +4,10 @@ from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
 from medrem.settings import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN
 from register_pat.models import PatientRec
-from doctor_search.models import DocSearch, DayOfWeek, Speciality
+from doctor_search.models import DocSearch, Speciality
 from datetime import datetime
 from doctor_search.views import doctor_search,doctor_search_speciality
+from django.db.models import Exists, OuterRef
 import re
 
 # Create your views here.
@@ -51,7 +52,7 @@ def webflow(request):
                          'Search doctr', 'Doc search', 'Doc Search', 'Doctor Availablity', 'Doctors', 'doctors','Doctor availablity'
                          'Available Doctors', 'available doctors', 'Find Doctor', 'Doctor search', 'Doctor Search']
     mobile = user[12:]
-    doctor_specialities= Speciality.objects.values_list('speciality', flat=True)
+    doctor_specialities= Speciality.objects.filter(Exists(DocSearch.objects.filter(speciality=OuterRef('pk')))).values_list('speciality', flat=True)
     if any(i in message for i in doctor_search_msg):
         for j in doctor_specialities:
             if(j in message):
@@ -63,14 +64,14 @@ def webflow(request):
         return HttpResponse(str(response))
     doctor_speciality_list = ''
     for i in doctor_specialities:
-        print(i)
         doctor_speciality_list = doctor_speciality_list+'\n'+str(i)
     response = MessagingResponse()
     response.message(
         """Available Servicies: 
         \nFor appointment details send \'Appointment<space>ID\'
-        \nFor all doctor\'s schedule send \'Search Doctors\'
-        \nTo search doctors based on speciality send Doctor\n Available specialities : {}""".format(doctor_speciality_list))
+        \nFor all doctor\'s schedule send \'Search<space>Doctors\'
+        \nTo search doctors based on speciality send
+\'Search<space>Doctor<space><speciality>\'\nAvailable specialities : {}""".format(doctor_speciality_list))
     return HttpResponse(str(response))
 
 # Send WhatsApp Messages
